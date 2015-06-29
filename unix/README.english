@@ -1,0 +1,70 @@
+This is rlwrap_extension Version 0.01 for Oracle 11g
+You should have those files:
+
+sql+			-- a wrapper script for sqlplus
+README			-- German README
+README.english		-- This file
+adrci			-- keyword list for adrci
+asmcmd			-- keyword list for asmcmd
+rman			-- keyword list for Recovery Manager
+sqlplus			-- keyword list for sqlplus
+sqlplus.user		-- keyword list for USER_* Views
+sqlplus.all		-- keyword list for ALL_* Views
+sqlplus.dba		-- keyword list for DBA_* Views
+sqlplus._init		-- keyword list for undocumented Instance parameters
+sqlplus.init		-- keyword list for documented Instance parameters
+sqlplus.packages	-- keyword list for all other packages
+sqlplus.rman		-- keyword list for RMAN Catalog Views RC_* 
+sqlplus.tables		-- keyword list for miscellaneous Tables
+sqlplus.vdollar		-- keyword list for V$* Views
+sqlplus.gvdollar	-- keyword list for GV$* Views
+
+sqlplus* and rman should go to /usr/local/share/rlwrap or wherever rlwrap
+installed its shared files directory
+
+sql+ belongs to /usr/local/bin or any directory in your PATH
+
+calling sql+ without parameter will result in
+
+rlwrap sqlplus / as sysdba 
+
+in any other case it passes its parameters to sqlplus (called with rlwrap)
+
+sql+ uses case insensitive name completion supplied by rlwrap since version 0.24.
+
+If you connect as "normal" user, rlwrap will `know´ all USER_* and ALL_* views and
+a few common tables (like PLAN_TABLE).
+If connecting as SYS or SYSTEM, rlwrap `knows´ additionally all DBA_* and V$* views, along
+with all documented and undocumented parameters 
+
+That's it
+
+Feel free to use it, it's public domain.
+
+CHANGELOG
+=========
+V0.04
+- deleted erroneous entries in sqlplus.user and sqlplus.all
+
+V0.03
+- merged the difference between DICT and DBA_VIEWS into sqlplus.dba, sqlplus.all
+  and sqlplus.user
+  36 view names DBA_* are in DBA_VIEWS but not in DICT (at least on a 11.1.0),
+  same applies to USER_* (68 missing) and ALL_* (64).
+  try the following:
+  SELECT view_name FROM dba_views WHERE view_name LIKE 'ALL\_%' ESCAPE '\'
+     MINUS
+  SELECT table_name FROM dict WHERE table_name LIKE 'ALL\_%' ESCAPE '\';
+
+V0.02:
+- added keyword list for adrci 
+
+V0.01:
+- first public version
+
+DISCLAIMER:
+Use it at your own risk. The author does not take any liability
+for any possible damage caused by use of these files.
+
+Johannes Gritsch
+22-Aug-2007

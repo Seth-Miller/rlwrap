@@ -1,0 +1,38 @@
+#!/bin/bash
+
+# This file is public domain and comes with NO WARRANTY of any kind
+# sql+ sqlplus with rlwrap
+
+[ _"$DEBUG" = _ON ] && set -x
+
+R_HOME=${RLWRAP_HOME:=/usr/local/share/rlwrap}
+
+# check for connect string
+if [ $# = 0 ] ; then
+   # no connect string, use default
+   CONNECT="/ as sysdba"
+   UNAME=sys
+else
+   # find out, if sys or system user
+   CONNECT="$*"
+   UNAME=$(echo "$1" | awk '{split($1,f,/[/@]/); print f[1]}')
+   fi
+
+# prepare list of stop words
+FILE_LIST="-f $R_HOME/sqlplus.all 
+	-f $R_HOME/sqlplus.functions
+	-f $R_HOME/sqlplus.tables
+	-f $R_HOME/sqlplus.user 
+	-f $R_HOME/sqlplus.utl_packages"
+case $UNAME in
+   sys|system) FILE_LIST="$FILE_LIST
+	-f $R_HOME/sqlplus.dba
+	-f $R_HOME/sqlplus.dbms_packages
+	-f $R_HOME/sqlplus.init
+	-f $R_HOME/sqlplus._init
+	-f $R_HOME/sqlplus.gvdollar
+	-f $R_HOME/sqlplus.vdollar" ;;
+   esac
+
+
+exec rlwrap -i -b '()=!<>&+-*|:;,' $FILE_LIST $ORACLE_HOME/bin/sqlplus $CONNECT

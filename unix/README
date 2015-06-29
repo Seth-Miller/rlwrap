@@ -1,0 +1,73 @@
+Das ist rlwrap_extension Version 0.01 for Oracle 11g
+Sie sollten folgende Dateien erhalten haben:
+
+sql+			-- ein wrapper script für sqlplus
+README			-- Diese Anleitung
+README.english  	-- Englische Anleitung
+adrci			-- Schlüsselwortdatei für adrci
+asmcmd			-- Schlüsselwortdatei für asmcmd
+rman			-- Schlüsselwortdatei für Recovery Manager
+sqlplus			-- Schlüsselwortdatei für sqlplus allgemein
+sqlplus.user		-- Schlüsselwortdatei für USER_* Views
+sqlplus.all		-- Schlüsselwortdatei für ALL_* Views
+sqlplus.dba		-- Schlüsselwortdatei für DBA_* Views
+sqlplus._init		-- Schlüsselwortdatei für undokumentierte Instanzparameter
+sqlplus.init		-- Schlüsselwortdatei für dokumentierte Instanzparameter
+sqlplus.packages        -- Schlüsselwortdatei für alle anderen Packages
+sqlplus.rman		-- Schlüsselwortdatei für RMAN Views in der Katalog DB
+sqlplus.tables		-- Schlüsselwortdatei für allgemeine Tabellen
+sqlplus.vdollar		-- Schlüsselwortdatei für V$* Views
+sqlplus.gvdollar	-- Schlüsselwortdatei für GV$* Views
+
+Alle Dateien sqlplus* und rman gehen nach /usr/local/share/rlwrap oder dorthin,
+wo rlwrap seine shared files installiert hat. 
+
+sql+ gehört nach /usr/local/bin oder sonstwo im Pfad.
+
+Das Script namens sql+ erledigt folgende Aufgaben:
+  Wenn man es ohne Parameter aufruft, versucht es
+
+rlwrap sqlplus / as sysdba
+
+sonst übergibt es alle Parameter an sqlplus (mit rlwrap) weiter.
+
+sql+ macht Gebrauch von der case insensitive name completion, die rlwrap 
+seit der Version 0.24 anbietet.
+
+Wenn der connect als "normaler" User passiert (nicht SYS, nicht SYSTEM), dann
+kennt rlwrap die Views USER_*, ALL_* und einige Default-Tabellen (z.B.
+PLAN_TABLE).  Wenn der connect als sys oder system erfolgt, kennt es
+zusätzlich die Views DBA_* und V$, sowie alle Init-Parameter. Alle Dateien
+wurden auf Oracle 10gr2 abgestimmt.
+
+Alle Dateien dieses Pakets sind public domain - Mit Ausnahme des Scripts sql+
+sind es ohnehin nur händisch zusammengetragene Schlüsselworte, die sich leicht
+aus diversen Quellen reproduzieren lassen. 
+
+Änderungen:
+===========
+0.04
+- Fehlerhafte Einträge in sqlplus.user und sqlplus.all entfernt
+
+0.03
+- Differenz zwischen DICT und DBA_VIEWS eingefügt
+  36 Views namens DBA_* mehr in DBA_VIEWS! u.a DBA_SQL_PROFILES
+  Das selbe gilt für ALL_* und USER_* Views (64 resp 68 fehlende Namen)
+  Query:
+  SELECT view_name FROM dba_views WHERE view_name LIKE 'ALL\_%' ESCAPE '\'
+     MINUS
+  SELECT table_name FROM dict WHERE table_name LIKE 'ALL\_%' ESCAPE '\';
+
+0.02
+- Schlüsselwortdatei für ADRCI hinzugefügt
+
+0.01:
+- erste veröffentlichte Version
+
+HAFTUNGSAUSCHLUSS:
+Verwendung dieses Pakets auf eigene Verantwortung.
+Der Autor übernimmt keine wie auch immer geartete Haftung für etwaige Schäden,
+die durch die Anwendung dieser Dateien entstehen sollten. 
+
+Johannes Gritsch
+22.08.2007
